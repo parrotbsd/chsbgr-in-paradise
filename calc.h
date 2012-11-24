@@ -18,6 +18,7 @@ class Calc
     string convertDB(int);
     void addBinary(bitset<BITS>&, bitset<BITS>);
     bool overflowCheck(int, int, char);
+    void overflowErrorMessage();
   public:
     string convertToString(int, int);
     void initialize();

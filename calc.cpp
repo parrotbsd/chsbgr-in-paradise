@@ -42,39 +42,153 @@ int Calc::convertToDecimal(string input)
   int length = input.length(), sum(0);
   for (int i=0; i<length; i++)
   {
-    if (isdigit(input[i]))
-      sum += input[i]*pow(base, length-i-1);
-    else
+    switch (input[i])
     {
-      switch (input[i])
-      {
-        case 'a':
-        case 'A':
+      case '0':
+        break;
+      case '1':
+        if (overflowCheck(sum, 1*pow(base, length-i-1), '+'))
+          sum += 1*pow(base, length-i-1);
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      case '2':
+        if (overflowCheck(sum, 2*pow(base, length-i-1), '+'))
+          sum += 2*pow(base, length-i-1);
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      case '3':
+        if (overflowCheck(sum, 3*pow(base, length-i-1), '+'))
+          sum += 3*pow(base, length-i-1);
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      case '4':
+        if (overflowCheck(sum, 4*pow(base, length-i-1), '+'))
+          sum += 4*pow(base, length-i-1);
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      case '5':
+        if (overflowCheck(sum, 5*pow(base, length-i-1), '+'))
+          sum += 5*pow(base, length-i-1);
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      case '6':
+        if (overflowCheck(sum, 6*pow(base, length-i-1), '+'))
+          sum += 6*pow(base, length-i-1);
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      case '7':
+        if (overflowCheck(sum, 7*pow(base, length-i-1), '+'))
+          sum += 7*pow(base, length-i-1);
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      case '8':
+        if (overflowCheck(sum, 8*pow(base, length-i-1), '+'))
+          sum += 8*pow(base, length-i-1);
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      case '9':
+        if (overflowCheck(sum, 9*pow(base, length-i-1), '+'))
+          sum += 9*pow(base, length-i-1);
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      case 'a':
+      case 'A':
+        if (overflowCheck(sum, 10*pow(16, length-i-1), '+'))
           sum += 10*pow(16, length-i-1);
-          break;
-        case 'b':
-        case 'B':
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      case 'b':
+      case 'B':
+        if (overflowCheck(sum, 11*pow(16, length-i-1), '+'))
           sum += 11*pow(16, length-i-1);
-          break;
-        case 'c':
-        case 'C':
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      case 'c':
+      case 'C':
+        if (overflowCheck(sum, 12*pow(16, length-i-1), '+'))
           sum += 12*pow(16, length-i-1);
-          break;
-        case 'd':
-        case 'D':
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      case 'd':
+      case 'D':
+        if (overflowCheck(sum, 13*pow(16, length-i-1), '+'))
           sum += 13*pow(16, length-i-1);
-          break;
-        case 'e':
-        case 'E':
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      case 'e':
+      case 'E':
+        if (overflowCheck(sum, 14*pow(16, length-i-1), '+'))
           sum += 14*pow(16, length-i-1);
-          break;
-        case 'f':
-        case 'F':
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      case 'f':
+      case 'F':
+        if (overflowCheck(sum, 15*pow(16, length-i-1), '+'))
           sum += 15*pow(16, length-i-1);
-          break;
-        default:
-          cerr << "Error in convertToDecimal switch";
-      }
+        else
+        {
+          overflowErrorMessage();
+          return 0;
+        }
+        break;
+      default:
+        cerr << "Error in convertToDecimal switch";
     }
   }
   return sum;
@@ -93,17 +207,7 @@ void Calc::add()
 {
   if (!overflowCheck(value[0], value[1], '+'))
   {
-    attron(A_STANDOUT);
-    mvprintw(3, 1, "Error - Overflow");
-    mvprintw(4, 1, "Press <enter>");
-    attroff(A_STANDOUT);
-    refresh();
-    cin.get();
-    move(3, 1);
-    clrtoeol();
-    move(4, 1);
-    clrtoeol();
-    refresh();
+    overflowErrorMessage();
     return;
   }
   //add the bottom two values in the stack
@@ -126,17 +230,7 @@ void Calc::subtract()
 {
   if (!overflowCheck(value[0], value[1], '-'))
   {
-    attron(A_STANDOUT);
-    mvprintw(3, 1, "Error - Overflow");
-    mvprintw(4, 1, "Press <enter>");
-    attroff(A_STANDOUT);
-    refresh();
-    cin.get();
-    move(3, 1);
-    clrtoeol();
-    move(4, 1);
-    clrtoeol();
-    refresh();
+    overflowErrorMessage();
     return;
   }
   //subtract the bottom number from the one above it
@@ -160,17 +254,7 @@ void Calc::mult()
 {
   if (!overflowCheck(value[0], value[1], '*'))
   {
-    attron(A_STANDOUT);
-    mvprintw(3, 1, "Error - Overflow");
-    mvprintw(4, 1, "Press <enter>");
-    attroff(A_STANDOUT);
-    refresh();
-    cin.get();
-    move(3, 1);
-    clrtoeol();
-    move(4, 1);
-    clrtoeol();
-    refresh();
+    overflowErrorMessage();
     return;
   }
   //multiply the bottom two numbers in the stack
@@ -491,13 +575,13 @@ bool Calc::overflowCheck(int value1, int value2, char operand)
     default:
       cerr << "Error in overflow check switch";
   }
+  return true;
 }
 
 
 bool Calc::inputCheck(string input)
 {
-    if (input.length()>9)
-      return false;
+
 
     switch (base)
     {
@@ -540,4 +624,17 @@ bool Calc::inputCheck(string input)
     return true;
 }
 
+void Calc::overflowErrorMessage()
+{
+  attron(A_STANDOUT);
+  mvprintw(3,1, "Overflow. Input too large.");
+  mvprintw(4,1, "Press <enter> to continue.");
+  attroff(A_STANDOUT);
+  refresh();
+  cin.get();
+  move(3,1);
+  clrtoeol();
+  move(4,1);
+  clrtoeol();
+}
 
