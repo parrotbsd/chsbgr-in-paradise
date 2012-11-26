@@ -204,12 +204,13 @@ int Calc::convertToDecimal(string input)
 void Calc::add()
 {
   int elements = value.size();
+  //check for overflow first
   if (!overflowCheck(value.back(), value.at(elements-2), '+'))
   {
     overflowErrorMessage();
     return;
   }
-  //add the bottom two values in the stack
+  //add the bottom two values in the stack and store the result in the second to last spot
   value.at(elements-2) += value.back();
   display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
@@ -228,7 +229,7 @@ void Calc::subtract()
     overflowErrorMessage();
     return;
   }
-  //subtract the bottom number from the one above it
+  //subtract the bottom number from the one above it and store in the second to last spot
   value.at(elements-2) = value.at(elements-2) - value.back();
   display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
@@ -248,7 +249,7 @@ void Calc::mult()
     overflowErrorMessage();
     return;
   }
-  //multiply the bottom two numbers in the stack
+  //multiply the bottom two numbers in the stack and store in the second to last spot
   value.at(elements-2) *= value.back();
   display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
@@ -267,7 +268,7 @@ void Calc::div()
     overflowErrorMessage();
     return;
   }
-  //Divide the bottom number into the one above it(gives quotient)
+  //Divide the bottom number into the one above it(gives quotient) and store into the second to last spot
   value.at(elements-2) = value.at(elements-2)/value.back();
   display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
@@ -286,7 +287,7 @@ void Calc::mod()
     overflowErrorMessage();
     return;
   }
-  //Finds the remainder of the bottom number divided into the one above
+  //Finds the remainder of the bottom number divided into the one above and store into the second to last spot
   value.at(elements-2) = value.at(elements-2)%value.back();
   display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
@@ -301,6 +302,13 @@ void Calc::backslash()
 {
   value.pop_back();
   display.pop_back();
+}
+
+void Calc::repeat()
+{
+  int elements = value.size();
+  value.push_back(value.at(elements-1));
+  display.push_back(display.at(elements-1));
 }
 
 /*
@@ -390,9 +398,9 @@ void Calc::setInputValue(string input)
     {
       case 2:
         input = input.substr(1, input.length()-1); //remove neg sign
-        value[0] = convertToDecimal(input); //convert to abs value in decimal
-        value[0] *= -1; //negates the decimal value
-        display[0] = convertDB(value[0]); //converts the display value into two's complement
+        value.push_back(convertToDecimal(input)); //convert to abs value in decimal
+        value.back() *= -1; //negates the decimal value
+        display.push_back(convertDB(value.back())); //converts the display value into two's complement
         return;
         break;
       default:
@@ -418,7 +426,7 @@ void Calc::setInputValue(string input)
     case 2:
       value.push_back(convertToDecimal(input));
       display.push_back(input);
-      display[0].insert(0,1,'0'); //two's complement
+      display.back().insert(0,1,'0'); //two's complement
       break;
     case 8:
       value.push_back(convertToDecimal(input));
@@ -480,11 +488,11 @@ void Calc::setDisplay(int pos, string input)
   if (base == 2)
   {
     if (input[0] == '-')
-      display[pos] = convertDB(value[pos]);
+      display.at(pos) = convertDB(value.at(pos));
     else
     {
-      display[pos] = input;
-      display[pos].insert(0,1,'0');
+      display.at(pos) = input;
+      display.at(pos).insert(0,1,'0');
     }
   }
   else

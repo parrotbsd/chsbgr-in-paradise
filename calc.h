@@ -39,6 +39,7 @@ class Calc
     void div();
     void mod();
     void backslash();
+    void repeat();
 };
 
 #endif
