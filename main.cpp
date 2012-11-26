@@ -54,20 +54,22 @@ int main()
   getmaxyx(stdscr, row, col);
   //set the size of the stack
   calc.setStack(row-1);
-  //initialize our data arrays
-  calc.initialize();
 
   do
   {
     displayScreen(row, col, calc);
     refresh();
     ch = getch();
+    int elements = calc.getDisplay().size();
     switch (ch)
     {
       case 10: //enter
         //If no number is entered, place another copy of register 1 on the stack
         if (input == "")
-          input = calc.getDisplay(0);
+        {
+          calc.repeat();
+          break;
+        }
         //if input is kosher, send it to be assigned to the stack
         if (calc.inputCheck(input))
           calc.setInputValue(input);
@@ -93,19 +95,7 @@ int main()
         clrtoeol();
         break;
       case 92: //backslash
-        for (int i=0; i<row-2; i++)
-        {
-          if (calc.getValue(i+1))
-          {
-            calc.setValue(i, calc.getValue(i+1));
-            calc.setDisplay(i, calc.getDisplay(i+1));
-          }
-          else
-          {
-            calc.setValue(i, 0);
-            calc.setDisplay(i, "");
-          }
-        }
+        calc.backslash();
         break;
       case 43: //plus
         /*
@@ -168,36 +158,23 @@ int main()
       case 111://octal
         calc.setBase('o');
         //converts the stack to the relevant base
-        for (int i=0; i<row-1; i++)
-        {
-          //This makes sure we don't try to convert empty registers
-          if (calc.getValue(i))
-            calc.setDisplay(i, calc.convertToString(calc.getValue(i),8));
-        }
+        for (int i=elements-1; i>=0; i--)
+          calc.setDisplay(elements-i-1, calc.convertToString(calc.getValue(elements-1-i), 8));
         break;
       case 98://binary
         calc.setBase('b');
-        for (int i=0; i<row-1; i++)
-        {
-          if (calc.getValue(i))
-            calc.setDisplay(i, calc.convertToString(calc.getValue(i),2));
-        }
+        for (int i=elements-1; i>=0; i--)
+          calc.setDisplay(elements-i-1, calc.convertToString(calc.getValue(elements-1-i), 2));
         break;
       case 100://decimal
         calc.setBase('d');
-        for (int i=0; i<row-1; i++)
-        {
-          if (calc.getValue(i))
-            calc.setDisplay(i, calc.convertToString(calc.getValue(i),10));
-        }
+        for (int i=elements-1; i>=0; i--)
+          calc.setDisplay(elements-i-1, calc.convertToString(calc.getValue(elements-1-i), 10));
         break;
       case 104://hex
         calc.setBase('h');
-        for (int i=0; i<row-1; i++)
-        {
-          if (calc.getValue(i))
-            calc.setDisplay(i, calc.convertToString(calc.getValue(i),16));
-        }
+        for (int i=elements-1; i>=0; i--)
+          calc.setDisplay(elements-i-1, calc.convertToString(calc.getValue(elements-1-i), 16));
         break;
       default:
         input+=ch;
@@ -270,9 +247,14 @@ void displayScreen(int row, int col, Calc& calc)
     clrtoeol();
   }
   //draw the values in the stack
-  for (int i=0; i<row-1; i++)
-    mvprintw(row-i-3, 80-calc.getDisplay(i).length(), "%s", calc.getDisplay(i).c_str());
-  //mvprintw(row-3, 60-calc.getDisplay(0).length(), "%s", calc.getDisplay(0).c_str());
+  int elements = calc.getDisplay().size();
+  for (int i=0; i<elements; i++)
+  {
+    //store the current stack string into dispValue
+    string dispValue = calc.getDisplayValue(elements-i-1);
+    int stringLen = dispValue.length();
+    mvprintw(row-i-3, 80-stringLen, "%s", dispValue.c_str());
+  }
   //draws the horizontal line
   mvhline(row-2, 1, 95, 80);
   move(row-1, 81);

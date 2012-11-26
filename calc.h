@@ -2,6 +2,7 @@
 #define CALC_H
 #include <string>
 #include <bitset>
+#include <vector>
 
 using namespace std;
 
@@ -11,8 +12,8 @@ class Calc
 {
   private:
     int base;
-    string display[100];
-    int value[100];
+    vector<string> display;
+    vector<int> value;
     int stack;
     int convertToDecimal(string);
     string convertDB(int);
@@ -30,12 +31,15 @@ class Calc
     void setBase(char);
     char getBase();
     void setDisplay(int, string);
-    string getDisplay(int);
+    string getDisplayValue(int);
+    vector<string> getDisplay();
     void add();
     void subtract();
     void mult();
     void div();
     void mod();
+    void backslash();
+    void repeat();
 };
 
 #endif

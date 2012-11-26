@@ -24,6 +24,7 @@
 #include <cstdlib>
 #include <ncurses.h>
 #include "calc.h"
+#include <vector>
 
 using namespace std;
 
@@ -54,7 +55,13 @@ string Calc::convertToString(int value, int base)
   reverse( buf.begin(), buf.end() );
   return buf;
 }
-
+/*
+  This function accepts a string of numbers, entered by the user. It iterates over
+  each character, adding the appropriate value of each place to a variable called
+  sum. If at any point the conversion will lead to sum being greater than the
+  limit, the operation stops and displays an overflow message. If the conversion
+  completes successfully, it returns the integer value of the input in base 10.
+*/
 int Calc::convertToDecimal(string input)
 {
   int length = input.length(), sum(0);
@@ -212,119 +219,114 @@ int Calc::convertToDecimal(string input)
   return sum;
 }
 
-void Calc::initialize()
-{
-  for (int i=0; i<stack; i++)
-  {
-    value[i] = 0;
-    display[i] = "";
-  }
-}
-
 void Calc::add()
 {
-  if (!overflowCheck(value[0], value[1], '+'))
+  int elements = value.size();
+  //check for overflow first
+  if (!overflowCheck(value.back(), value.at(elements-2), '+'))
   {
     overflowErrorMessage();
     return;
   }
-  //add the bottom two values in the stack
-  value[0] += value[1];
-  display[0] = convertToString(value[0], base);
+  //add the bottom two values in the stack and store the result in the second to last spot
+  value.at(elements-2) += value.back();
+  display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
   if (base == 2)
-    display[0] = convertDB(value[0]);
+    display.back() = convertDB(value.back());
   //move the stack down
-  for (int i=1; i<stack-1; i++)
-  {
-    value[i] = value[i+1];
-    display[i] = display[i+1];
-  }
-  value[stack-1] = 0;
-  display[stack-1] = "";
+  value.pop_back();
+  display.pop_back();
 }
 
 void Calc::subtract()
 {
-  if (!overflowCheck(value[0], value[1], '-'))
+  int elements = value.size();
+  if (!overflowCheck(value.back(), value.at(elements-2), '-'))
   {
     overflowErrorMessage();
     return;
   }
-  //subtract the bottom number from the one above it
-  value[0] = value[1] - value[0];
-  display[0] = convertToString(value[0], base);
+  //subtract the bottom number from the one above it and store in the second to last spot
+  value.at(elements-2) = value.at(elements-2) - value.back();
+  display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
   if (base == 2)
-    display[0] = convertDB(value[0]);
+    display.at(elements-2) = convertDB(value.at(elements-2));
   //move the stack down
-  for (int i=1; i<stack-1; i++)
-  {
-    value[i] = value[i+1];
-    display[i] = display[i+1];
-  }
-  value[stack-1] = 0;
-  display[stack-1] = "";
+  value.pop_back();
+  display.pop_back();
 }
 
 
 void Calc::mult()
 {
-  if (!overflowCheck(value[0], value[1], '*'))
+  int elements = value.size();
+  if (!overflowCheck(value.back(), value.at(elements-2), '*'))
   {
     overflowErrorMessage();
     return;
   }
-  //multiply the bottom two numbers in the stack
-  value[0] *= value[1];
-  display[0] = convertToString(value[0], base);
+  //multiply the bottom two numbers in the stack and store in the second to last spot
+  value.at(elements-2) *= value.back();
+  display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
   if (base == 2)
-    display[0] = convertDB(value[0]);
+    display.at(elements-2) = convertDB(value.at(elements-2));
   //move the stack down
-  for (int i=1; i<stack-1; i++)
-  {
-    value[i] = value[i+1];
-    display[i] = display[i+1];
-  }
-  value[stack-1] = 0;
-  display[stack-1] = "";
+  value.pop_back();
+  display.pop_back();
 }
 
 void Calc::div()
 {
-  //Divide the bottom number into the one aboce it(gives quotient)
-  value[0] = value[1]/value[0];
-  display[0] = convertToString(value[0], base);
+  int elements = value.size();
+  if (value.back() == 0)
+  {
+    overflowErrorMessage();
+    return;
+  }
+  //Divide the bottom number into the one above it(gives quotient) and store into the second to last spot
+  value.at(elements-2) = value.at(elements-2)/value.back();
+  display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
   if (base == 2)
-    display[0] = convertDB(value[0]);
+    display.at(elements-2) = convertDB(value.at(elements-2));
   //move the stack down
-  for (int i=1; i<stack-1; i++)
-  {
-    value[i] = value[i+1];
-    display[i] = display[i+1];
-  }
-  value[stack-1] = 0;
-  display[stack-1] = "";
+  value.pop_back();
+  display.pop_back();
 }
 
 void Calc::mod()
 {
-  //Finds the remainder of the bottom number divided into the one above
-  value[0] = value[1]%value[0];
-  display[0] = convertToString(value[0], base);
+  int elements = value.size();
+  if (value.back() == 0)
+  {
+    overflowErrorMessage();
+    return;
+  }
+  //Finds the remainder of the bottom number divided into the one above and store into the second to last spot
+  value.at(elements-2) = value.at(elements-2)%value.back();
+  display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
   if (base == 2)
-    display[0] = convertDB(value[0]);
+    display.at(elements-2) = convertDB(value.at(elements-2));
   //move the stack down
-  for (int i=1; i<stack-1; i++)
-  {
-    value[i] = value[i+1];
-    display[i] = display[i+1];
-  }
-  value[stack-1] = 0;
-  display[stack-1] = "";
+  value.pop_back();
+  display.pop_back();
+}
+
+void Calc::backslash()
+{
+  value.pop_back();
+  display.pop_back();
+}
+
+void Calc::repeat()
+{
+  int elements = value.size();
+  value.push_back(value.at(elements-1));
+  display.push_back(display.at(elements-1));
 }
 
 /*
@@ -407,12 +409,6 @@ void Calc::setStack(int rows)
 void Calc::setInputValue(string input)
 {
   bool negative = false;
-  //move the values in the stack up one to prepare for new input
-  for (int i=stack-1; i>0; i--)
-  {
-    value[i] = value[i-1];
-    display[i] = display[i-1];
-  }
   //Now we handle negation
   if (input[0] == '-')
   {
@@ -420,9 +416,9 @@ void Calc::setInputValue(string input)
     {
       case 2:
         input = input.substr(1, input.length()-1); //remove neg sign
-        value[0] = convertToDecimal(input); //convert to abs value in decimal
-        value[0] *= -1; //negates the decimal value
-        display[0] = convertDB(value[0]); //converts the display value into two's complement
+        value.push_back(convertToDecimal(input)); //convert to abs value in decimal
+        value.back() *= -1; //negates the decimal value
+        display.push_back(convertDB(value.back())); //converts the display value into two's complement
         return;
         break;
       default:
@@ -436,8 +432,8 @@ void Calc::setInputValue(string input)
   {
     case 10:
       {
-        value[0] = atoi(input.c_str());
-        display[0] = convertToString(value[0], 10);
+        value.push_back(convertToDecimal(input.c_str()));
+        display.push_back(convertToString(value.back(), 10));
         if (negative)
         {
           display[0].insert(0,1,'-');
@@ -446,13 +442,13 @@ void Calc::setInputValue(string input)
       }
       break;
     case 2:
-      value[0] = convertToDecimal(input);
-      display[0] = input;
-      display[0].insert(0,1,'0'); //two's complement
+      value.push_back(convertToDecimal(input));
+      display.push_back(input);
+      display.back().insert(0,1,'0'); //two's complement
       break;
     case 8:
-      value[0] = convertToDecimal(input);
-      display[0] = input;
+      value.push_back(convertToDecimal(input));
+      display.push_back(input);
       if (negative)
         {
           display[0].insert(0,1,'-');
@@ -460,8 +456,8 @@ void Calc::setInputValue(string input)
         }
       break;
     case 16:
-      value[0] = convertToDecimal(input);
-      display[0] = input;
+      value.push_back(convertToDecimal(input));
+      display.push_back(input);
       if (negative)
         {
           display[0].insert(0,1,'-');
@@ -510,30 +506,35 @@ void Calc::setDisplay(int pos, string input)
   if (base == 2)
   {
     if (input[0] == '-')
-      display[pos] = convertDB(value[pos]);
+      display.at(pos) = convertDB(value.at(pos));
     else
     {
-      display[pos] = input;
-      display[pos].insert(0,1,'0');
+      display.at(pos) = input;
+      display.at(pos).insert(0,1,'0');
     }
   }
   else
-    display[pos] = input;
+    display.at(pos) = input;
 }
 
-string Calc::getDisplay(int pos)
+vector<string> Calc::getDisplay()
 {
-  return display[pos];
+  return display;
+}
+
+string Calc::getDisplayValue(int pos)
+{
+  return display.at(pos);
 }
 
 void Calc::setValue(int pos, int input)
 {
-  value[pos] = input;
+  value.at(pos) = input;
 }
 
 int Calc::getValue(int pos)
 {
-  return value[pos];
+  return value.at(pos);
 }
 
 /*
