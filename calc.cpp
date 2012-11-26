@@ -303,6 +303,13 @@ void Calc::backslash()
   display.pop_back();
 }
 
+void Calc::repeat()
+{
+  int elements = value.size();
+  value.push_back(value.at(elements-1));
+  display.push_back(display.at(elements-1));
+}
+
 /*
   Accepts some decimal value, and returns that number in two's complement binary representation as a string.
   Part of this function was written by Matthew Wallace (the two lines before return)
@@ -390,9 +397,9 @@ void Calc::setInputValue(string input)
     {
       case 2:
         input = input.substr(1, input.length()-1); //remove neg sign
-        value[0] = convertToDecimal(input); //convert to abs value in decimal
-        value[0] *= -1; //negates the decimal value
-        display[0] = convertDB(value[0]); //converts the display value into two's complement
+        value.push_back(convertToDecimal(input)); //convert to abs value in decimal
+        value.back() *= -1; //negates the decimal value
+        display.push_back(convertDB(value.back())); //converts the display value into two's complement
         return;
         break;
       default:
@@ -418,7 +425,7 @@ void Calc::setInputValue(string input)
     case 2:
       value.push_back(convertToDecimal(input));
       display.push_back(input);
-      display[0].insert(0,1,'0'); //two's complement
+      display.back().insert(0,1,'0'); //two's complement
       break;
     case 8:
       value.push_back(convertToDecimal(input));
@@ -480,11 +487,11 @@ void Calc::setDisplay(int pos, string input)
   if (base == 2)
   {
     if (input[0] == '-')
-      display[pos] = convertDB(value[pos]);
+      display.at(pos) = convertDB(value.at(pos));
     else
     {
-      display[pos] = input;
-      display[pos].insert(0,1,'0');
+      display.at(pos) = input;
+      display.at(pos).insert(0,1,'0');
     }
   }
   else

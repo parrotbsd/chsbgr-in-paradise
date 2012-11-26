@@ -50,7 +50,10 @@ int main()
       case 10: //enter
         //If no number is entered, place another copy of register 1 on the stack
         if (input == "")
-          input = calc.getDisplayValue(elements-1);
+        {
+          calc.repeat();
+          break;
+        }
         //if input is kosher, send it to be assigned to the stack
         if (calc.inputCheck(input))
           calc.setInputValue(input);
@@ -139,41 +142,23 @@ int main()
       case 111://octal
         calc.setBase('o');
         //converts the stack to the relevant base
-        elements = getDisplay().size();
-        for (int i=0; i<elements; i++)
-        {
-          calc.getValue
-          calc.setDisplay(i, calc.convertToString(calc.getValue(elements-1), 8)
-        for (int i=0; i<row-1; i++)
-        {
-          //This makes sure we don't try to convert empty registers
-          if (calc.getValue(i))
-            calc.setDisplay(i, calc.convertToString(calc.getValue(i),8));
-        }
+        for (int i=elements-1; i>=0; i--)
+          calc.setDisplay(elements-i-1, calc.convertToString(calc.getValue(elements-1-i), 8));
         break;
       case 98://binary
         calc.setBase('b');
-        for (int i=0; i<row-1; i++)
-        {
-          if (calc.getValue(i))
-            calc.setDisplay(i, calc.convertToString(calc.getValue(i),2));
-        }
+        for (int i=elements-1; i>=0; i--)
+          calc.setDisplay(elements-i-1, calc.convertToString(calc.getValue(elements-1-i), 2));
         break;
       case 100://decimal
         calc.setBase('d');
-        for (int i=0; i<row-1; i++)
-        {
-          if (calc.getValue(i))
-            calc.setDisplay(i, calc.convertToString(calc.getValue(i),10));
-        }
+        for (int i=elements-1; i>=0; i--)
+          calc.setDisplay(elements-i-1, calc.convertToString(calc.getValue(elements-1-i), 10));
         break;
       case 104://hex
         calc.setBase('h');
-        for (int i=0; i<row-1; i++)
-        {
-          if (calc.getValue(i))
-            calc.setDisplay(i, calc.convertToString(calc.getValue(i),16));
-        }
+        for (int i=elements-1; i>=0; i--)
+          calc.setDisplay(elements-i-1, calc.convertToString(calc.getValue(elements-1-i), 16));
         break;
       default:
         input+=ch;
