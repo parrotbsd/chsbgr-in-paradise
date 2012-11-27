@@ -36,6 +36,19 @@ to elevate your privileges when attempting 'make install'.
 This program will not compile on the Windows operating system. If you run
 Windows, then I'm sorry. Try Virtual Box.
 
+If running the make generates a string of errors, try the following fix:
+
+Open the Makefile in your favorite text editor, and replace the line
+
+LIBS=
+
+with the line
+
+LIBS= "-lncurses"
+
+You may also need to install the ncurses package.
+You can find that package at gnu.org/software/ncurses
+
 Running
 ===============================================================================
 
@@ -45,10 +58,6 @@ numbers at one time, enter them all onto the stack first, then switch bases.
 
 Known Issues
 ===============================================================================
+None at this time.
 
-I have noticed a random bug that I am unable to reproduce as of yet.
-Occasionally the stack will switch all empty values to zero's. Should this
-happen, either backspace to clear them or quit and restart. As soon as I
-find the reason and patch it, I'll release a new version.
-
-Any other issues crop up, feel free to notify me. jwallace.git at gee mail.com
+Any issues crop up, feel free to notify me. jwallace.git at gee mail.com
