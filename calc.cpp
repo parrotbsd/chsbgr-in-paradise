@@ -1,3 +1,21 @@
+/*
+ *   Copyright 2012 Jared Wallace
+ *   This file is part of St. Somewhere.
+ *
+ *   St. Somewhere is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   St. Somewhere is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with St. Somewhere.  If not, see <http://www.gnu.org/licenses/>.
+ *
+*/
 #include <iostream>
 #include <cmath>
 #include <bitset>
@@ -204,12 +222,13 @@ int Calc::convertToDecimal(string input)
 void Calc::add()
 {
   int elements = value.size();
+  //check for overflow first
   if (!overflowCheck(value.back(), value.at(elements-2), '+'))
   {
     overflowErrorMessage();
     return;
   }
-  //add the bottom two values in the stack
+  //add the bottom two values in the stack and store the result in the second to last spot
   value.at(elements-2) += value.back();
   display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
@@ -228,7 +247,7 @@ void Calc::subtract()
     overflowErrorMessage();
     return;
   }
-  //subtract the bottom number from the one above it
+  //subtract the bottom number from the one above it and store in the second to last spot
   value.at(elements-2) = value.at(elements-2) - value.back();
   display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
@@ -248,7 +267,7 @@ void Calc::mult()
     overflowErrorMessage();
     return;
   }
-  //multiply the bottom two numbers in the stack
+  //multiply the bottom two numbers in the stack and store in the second to last spot
   value.at(elements-2) *= value.back();
   display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
@@ -267,7 +286,7 @@ void Calc::div()
     overflowErrorMessage();
     return;
   }
-  //Divide the bottom number into the one above it(gives quotient)
+  //Divide the bottom number into the one above it(gives quotient) and store into the second to last spot
   value.at(elements-2) = value.at(elements-2)/value.back();
   display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
@@ -286,7 +305,7 @@ void Calc::mod()
     overflowErrorMessage();
     return;
   }
-  //Finds the remainder of the bottom number divided into the one above
+  //Finds the remainder of the bottom number divided into the one above and store into the second to last spot
   value.at(elements-2) = value.at(elements-2)%value.back();
   display.at(elements-2) = convertToString(value.at(elements-2), base);
   //we want binary in two's complement
