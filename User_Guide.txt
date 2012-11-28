@@ -1,0 +1,61 @@
+			User Guide for St. Somewhere
+================================================================================
+
+If you are unfamiliar with RPN calculators, read the first section. Otherwise,
+feel free to skip ahead to the next section.
+
+				RPN
+================================================================================
+
+RPN calculators work a bit differently from the calculators you are used to 
+using. For example, to add together 2 and 2, instead of pressing 2, <plus>,
+2, <equals> as you are used to, you will press 2,<enter>, 2, <plus>.
+
+You might be saying at this point, why is this the case? That's the same number
+of keypresses, just all backwards. Well, here's my favorite example, drawn from
+my college algebra class:
+
+Say the problem to be worked is (Log(10) + Log(4))/(Log(6) - Log(9)).
+
+On a regular algebraic mode calculator like the Ti-83, you would need to press
+parenthesis, log, 10, parenthesis, plus, log, 4, parenthesis, parenthesis,
+divide, parenthesis, log, 6, parenthesis, minus, log, 9, parenthesis,
+parenthesis, equals.
+
+On a RPN calculator like the HP-50g, you would need to press only
+10, log, 4, log, plus, 6, log, 9, log, minus, divide.
+
+That's a savings of 9 keystrokes. Not to mention it is much harder to screw up.
+
+It may seem quite strange at first, but I can promise that after one or two
+days of using this method, you will not want to go back.
+
+				Conversion
+===============================================================================
+
+Type as many values as you wish to convert onto the stack. When you have all
+the values on the stack, press the relevant key to convert them (b, d, h or o)
+
+				Binary
+===============================================================================
+
+You need to enter negative binary numbers in regular form, then negate them
+with 'n'. The number will automatically be converted to two's complement by
+the calculator.
+
+				Negation
+===============================================================================
+
+Enter the number first, then press 'n' for negation.
+
+				Hexadecimal
+===============================================================================
+
+You need to enter the letter values in upper case.
+
+Ex.
+
+	5AE67F
+
+
+
