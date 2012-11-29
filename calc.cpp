@@ -436,7 +436,7 @@ void Calc::setInputValue(string input)
         display.push_back(convertToString(value.back(), 10));
         if (negative)
         {
-          display[0].insert(0,1,'-');
+          display.back().insert(0,1,'-');
           value[0] *= -1;
         }
       }
@@ -451,8 +451,8 @@ void Calc::setInputValue(string input)
       display.push_back(input);
       if (negative)
         {
-          display[0].insert(0,1,'-');
-          value[0] *= -1;
+          display.back().insert(0,1,'-');
+          value.back() *= -1;
         }
       break;
     case 16:
@@ -460,8 +460,8 @@ void Calc::setInputValue(string input)
       display.push_back(input);
       if (negative)
         {
-          display[0].insert(0,1,'-');
-          value[0] *= -1;
+          display.back().insert(0,1,'-');
+          value.back() *= -1;
         }
       break;
     default:
