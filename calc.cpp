@@ -223,6 +223,8 @@ void Calc::add()
 {
   int elements = value.size();
   //check for overflow first
+  if (elements == 1)
+    return;
   if (!overflowCheck(value.back(), value.at(elements-2), '+'))
   {
     overflowErrorMessage();
@@ -242,6 +244,8 @@ void Calc::add()
 void Calc::subtract()
 {
   int elements = value.size();
+  if (elements == 1)
+    return;
   if (!overflowCheck(value.back(), value.at(elements-2), '-'))
   {
     overflowErrorMessage();
@@ -262,6 +266,8 @@ void Calc::subtract()
 void Calc::mult()
 {
   int elements = value.size();
+  if (elements == 1)
+    return;
   if (!overflowCheck(value.back(), value.at(elements-2), '*'))
   {
     overflowErrorMessage();
@@ -281,6 +287,8 @@ void Calc::mult()
 void Calc::div()
 {
   int elements = value.size();
+  if (elements == 1)
+    return;
   if (value.back() == 0)
   {
     overflowErrorMessage();
@@ -300,6 +308,8 @@ void Calc::div()
 void Calc::mod()
 {
   int elements = value.size();
+  if (elements == 1)
+    return;
   if (value.back() == 0)
   {
     overflowErrorMessage();
@@ -318,6 +328,9 @@ void Calc::mod()
 
 void Calc::backslash()
 {
+  int elements=value.size();
+  if (elements == 0)
+    return;
   value.pop_back();
   display.pop_back();
 }
