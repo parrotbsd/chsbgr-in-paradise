@@ -450,7 +450,7 @@ void Calc::setInputValue(string input)
         if (negative)
         {
           display.back().insert(0,1,'-');
-          value[0] *= -1;
+          value.back() *= -1;
         }
       }
       break;
